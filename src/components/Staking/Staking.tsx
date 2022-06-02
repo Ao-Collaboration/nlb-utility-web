@@ -1,6 +1,6 @@
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
-import erc721ABI from '../../abi/erc721ABI.json'
+import nlbABI from '../../abi/nlbABI.json'
 import stakingABI from '../../abi/stakingABI.json'
 import { getNlbContractId, getStakingContractId } from '../../config/chain'
 import { Web3Context } from '../../context/Web3/Web3Context'
@@ -60,12 +60,12 @@ const Staking: React.FC = () => {
 
 		const _nlbContract = new ethers.Contract(
 			nlbContractId,
-			erc721ABI,
+			nlbABI,
 			signer,
 		)
 		setNlbContract(_nlbContract)
 
-		const allNLBs = await _nlbContract.tokensOfOwner(address)
+		const allNLBs = await _nlbContract.walletOfOwner(address)
 		const stakedNLBs = await _stakingContract.listStakedTokensOfOwner(address)
 		const unstakedNLBs: BigNumber[] = []
 
