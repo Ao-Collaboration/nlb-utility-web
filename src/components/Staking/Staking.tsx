@@ -1,5 +1,6 @@
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import nlbABI from '../../abi/nlbABI.json'
 import stakingABI from '../../abi/stakingABI.json'
 import { getNlbContractId, getStakingContractId } from '../../config/chain'
@@ -156,11 +157,17 @@ const Staking: React.FC = () => {
 
 		const { chainId } = await web3Provider.getNetwork()
 		const stakingContractId = getStakingContractId(chainId)
-		const tx = await nlbContract?.setApprovalForAll(stakingContractId, true)
-		setTxPending(true)
-		await tx.wait()
-		setIsApproved(true)
-		setTxPending(false)
+		try {
+			const tx = await nlbContract?.setApprovalForAll(stakingContractId, true)
+			setTxPending(true)
+			await tx.wait()
+			setIsApproved(true)
+			setTxPending(false)
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error(err.message)
+			}
+		}
 	}
 
 	const doStake = async () => {
@@ -172,11 +179,17 @@ const Staking: React.FC = () => {
 			window.alert('Please select NLBs to stake')
 			return
 		}
-		const tx = await stakingContract?.stake(selected)
-		setTxPending(true)
-		await tx.wait()
-		setTxPending(false)
-		getNLBs()
+		try {
+			const tx = await stakingContract?.stake(selected)
+			setTxPending(true)
+			await tx.wait()
+			setTxPending(false)
+			getNLBs()
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error(err.message)
+			}
+		}
 	}
 
 	const doUnstake = async () => {
@@ -185,11 +198,17 @@ const Staking: React.FC = () => {
 			window.alert('Please select NLBs to unstake')
 			return
 		}
-		const tx = await stakingContract?.unstake(selected)
-		setTxPending(true)
-		await tx.wait()
-		setTxPending(false)
-		getNLBs()
+		try {
+			const tx = await stakingContract?.unstake(selected)
+			setTxPending(true)
+			await tx.wait()
+			setTxPending(false)
+			getNLBs()
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error(err.message)
+			}
+		}
 	}
 
 	const hasStakeSelected = !!staked.find(h => h.selected)
