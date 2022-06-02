@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { useContext, useState } from 'react'
 import { toast } from 'react-toastify'
 import Web3Modal from 'web3modal'
-import { chainId, infuraId } from '../../config/chain'
+import { infuraId, validChainIds } from '../../config/chain'
 import { Web3Context } from '../../context/Web3/Web3Context'
 import Spinner from '../Spinner/Spinner'
 import Button from './Button'
@@ -40,11 +40,9 @@ const ConnectButton: React.FC = () => {
 
 		const provider = new ethers.providers.Web3Provider(connection)
 
-		if ((await provider.getNetwork()).chainId !== chainId) {
+		if (!validChainIds.includes((await provider.getNetwork()).chainId)) {
 			toast.error(
-				`Invalid network selected. Please switch to ${
-					chainId === 4 ? 'Rinkeby' : 'Mainnet'
-				}`,
+				'Invalid network selected. Please switch to Mainnet',
 			)
 			return
 		}

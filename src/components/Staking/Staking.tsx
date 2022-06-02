@@ -1,8 +1,8 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
 import erc721ABI from '../../abi/erc721ABI.json'
 import stakingABI from '../../abi/stakingABI.json'
-import { nlbContractId, stakingContractId } from '../../config/chain'
+import { getNlbContractId, getStakingContractId } from '../../config/chain'
 import { Web3Context } from '../../context/Web3/Web3Context'
 import { NFTMetadata } from '../../interface/nftMetadata'
 import doFetch from '../../utils/doFetch'
@@ -20,6 +20,8 @@ interface NFTSelected extends NFTMetadata {
 const Staking: React.FC = () => {
 	const [unstaked, setUnstaked] = useState<NFTSelected[]>([])
 	const [staked, setStaked] = useState<NFTSelected[]>([])
+	const [stakingContract, setStakingContract] = useState<Contract>()
+	const [nlbContract, setNlbContract] = useState<Contract>()
 	const [isLoading, setIsLoading] = useState(true)
 	const [isApproved, setIsApproved] = useState(false)
 	const [txPending, setTxPending] = useState(false)
@@ -33,32 +35,38 @@ const Staking: React.FC = () => {
 
 	const classes = useStyles()
 
-	const signer = web3Provider.getSigner()
-	const stakingContract = new ethers.Contract(
-		stakingContractId,
-		stakingABI,
-		signer,
-	)
-	const nlbContract = new ethers.Contract(
-		nlbContractId,
-		erc721ABI,
-		signer,
-	)
-
 	useEffect(() => {
 		getNLBs()
-	}, [])
+	}, [web3Provider])
 
 	const getNLBs = async () => {
 		setIsLoading(true)
 
+		const { chainId } = await web3Provider.getNetwork()
+		const stakingContractId = getStakingContractId(chainId)
+		const nlbContractId = getNlbContractId(chainId)
 		if (!stakingContractId || !nlbContractId) {
 			setIsLoading(false)
 			return
 		}
 
-		const allNLBs = await nlbContract.tokensOfOwner(address)
-		const stakedNLBs = await stakingContract.listStakedTokensOfOwner(address)
+		const signer = web3Provider.getSigner()
+		const _stakingContract = new ethers.Contract(
+			stakingContractId,
+			stakingABI,
+			signer,
+		)
+		setStakingContract(_stakingContract)
+
+		const _nlbContract = new ethers.Contract(
+			nlbContractId,
+			erc721ABI,
+			signer,
+		)
+		setNlbContract(_nlbContract)
+
+		const allNLBs = await _nlbContract.tokensOfOwner(address)
+		const stakedNLBs = await _stakingContract.listStakedTokensOfOwner(address)
 		const unstakedNLBs: BigNumber[] = []
 
 		allNLBs.forEach((token_id: BigNumber) => {
@@ -70,7 +78,7 @@ const Staking: React.FC = () => {
 		const stakedNLBData: NFTSelected[] = []
 		const unstakedNLBData: NFTSelected[] = []
 
-		const basePath = await nlbContract.baseURI()
+		const basePath = await _nlbContract.baseURI()
 
 		for (let i = 0; i < stakedNLBs.length; i++) {
 			const metadata = await doFetch(
@@ -97,7 +105,7 @@ const Staking: React.FC = () => {
 
 		// Check approved status
 		setIsApproved(
-			await nlbContract.isApprovedForAll(
+			await _nlbContract.isApprovedForAll(
 				address,
 				stakingContractId,
 			),
@@ -125,7 +133,10 @@ const Staking: React.FC = () => {
 		if (isApproved) {
 			return
 		}
-		const tx = await nlbContract.setApprovalForAll(stakingContractId, true)
+
+		const { chainId } = await web3Provider.getNetwork()
+		const stakingContractId = getStakingContractId(chainId)
+		const tx = await nlbContract?.setApprovalForAll(stakingContractId, true)
 		setTxPending(true)
 		await tx.wait()
 		setIsApproved(true)
@@ -141,7 +152,7 @@ const Staking: React.FC = () => {
 			window.alert('Please select NLBs to stake')
 			return
 		}
-		const tx = await stakingContract.stake(selected)
+		const tx = await stakingContract?.stake(selected)
 		setTxPending(true)
 		await tx.wait()
 		setTxPending(false)
@@ -154,7 +165,7 @@ const Staking: React.FC = () => {
 			window.alert('Please select NLBs to unstake')
 			return
 		}
-		const tx = await stakingContract.unstake(selected)
+		const tx = await stakingContract?.unstake(selected)
 		setTxPending(true)
 		await tx.wait()
 		setTxPending(false)
