@@ -34,11 +34,10 @@ const Balance: React.FC = () => {
 				<>
 					<Button onClick={claimTokens} disabled={isLoading}>
 						<>
-							Claim $CHANGE
+							Claim $CHOW
 						</>
 					</Button>
-					<p className={classes.text}>Total claimed: <span className={classes.textSpecial}>{balance} $CHANGE</span></p> :
-					<p className={classes.text}>Claiming available when marketplace opens.</p>
+					<p className={classes.text}>Total claimed: <span className={classes.textSpecial}>{balance} $CHOW</span></p>
 				</>
 			}
 		</div>
