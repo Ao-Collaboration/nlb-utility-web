@@ -82,23 +82,36 @@ const Staking: React.FC = () => {
 		const basePath = await _nlbContract.baseURI()
 		// const basePath = 'https://opensea.mypinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/'
 
+		let metadataPromises: Promise<NFTSelected>[] = []
+
+		// Get staked metadata
 		for (let i = 0; i < stakedNLBs.length; i++) {
-			const metadata: NFTSelected = await doFetch(
+			metadataPromises.push(doFetch(
 				`${basePath}${stakedNLBs[i].toNumber()}`,
 				'GET',
-			)
+			))
+		}
+		await Promise.all(metadataPromises)
+		for (let i = 0; i < stakedNLBs.length; i++) {
+			const metadata: NFTSelected = await metadataPromises[i]
 			metadata.tokenId = stakedNLBs[i]
 			metadata.selected = false
 			metadata.name = metadata.name || `#${stakedNLBs[i].toNumber()}`
 			metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')
 			stakedNLBData.push(metadata)
 		}
-
+		
+		// Get unstaked metadata
+		metadataPromises = []
 		for (let i = 0; i < unstakedNLBs.length; i++) {
-			const metadata = await doFetch(
+			metadataPromises.push(doFetch(
 				`${basePath}${unstakedNLBs[i].toNumber()}`,
 				'GET',
-			)
+			))
+		}
+		await Promise.all(metadataPromises)
+		for (let i = 0; i < unstakedNLBs.length; i++) {
+			const metadata = await metadataPromises[i]
 			metadata.tokenId = unstakedNLBs[i]
 			metadata.selected = false
 			metadata.name = metadata.name || `#${unstakedNLBs[i].toNumber()}`
