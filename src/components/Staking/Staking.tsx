@@ -66,6 +66,7 @@ const Staking: React.FC = () => {
 		setNlbContract(_nlbContract)
 
 		const allNLBs = await _nlbContract.walletOfOwner(address)
+		// const allNLBs = [BigNumber.from(1), BigNumber.from(2)]
 		const stakedNLBs = await _stakingContract.listStakedTokensOfOwner(address)
 		const unstakedNLBs: BigNumber[] = []
 
@@ -79,24 +80,30 @@ const Staking: React.FC = () => {
 		const unstakedNLBData: NFTSelected[] = []
 
 		const basePath = await _nlbContract.baseURI()
+		// const basePath = 'https://opensea.mypinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/'
 
 		for (let i = 0; i < stakedNLBs.length; i++) {
-			const metadata = await doFetch(
-				`${basePath}${stakedNLBs[i].toNumber()}.json`,
+			const metadata: NFTSelected = await doFetch(
+				`${basePath}${stakedNLBs[i].toNumber()}`,
 				'GET',
 			)
 			metadata.tokenId = stakedNLBs[i]
 			metadata.selected = false
+			metadata.name = metadata.name || `#${stakedNLBs[i].toNumber()}`
+			metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')
 			stakedNLBData.push(metadata)
 		}
 
 		for (let i = 0; i < unstakedNLBs.length; i++) {
 			const metadata = await doFetch(
-				`${basePath}${unstakedNLBs[i].toNumber()}.json`,
+				`${basePath}${unstakedNLBs[i].toNumber()}`,
 				'GET',
 			)
 			metadata.tokenId = unstakedNLBs[i]
 			metadata.selected = false
+			metadata.name = metadata.name || `#${unstakedNLBs[i].toNumber()}`
+			metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+			console.error(metadata)
 			unstakedNLBData.push(metadata)
 		}
 
@@ -201,7 +208,7 @@ const Staking: React.FC = () => {
 										))}
 									</div>
 									{hasStakeSelected && (
-										<Button onClick={doUnstake} disabled={txPending} className='primary'>
+										<Button onClick={doUnstake} disabled={txPending}>
 											{txPending ? 'Tx Pending...' : 'Unstake'}
 										</Button>
 									)}
@@ -228,11 +235,11 @@ const Staking: React.FC = () => {
 						))}
 					</div>
 					{isApproved ? (
-						<Button onClick={doStake} disabled={txPending || !hasUnstakeSelected} className='primary'>
+						<Button onClick={doStake} disabled={txPending || !hasUnstakeSelected}>
 							{txPending ? 'Tx Pending...' : 'Stake'}
 						</Button>
 					) : (
-						<Button onClick={doApproval} disabled={txPending || !hasUnstakeSelected} className='primary'>
+						<Button onClick={doApproval} disabled={txPending || !hasUnstakeSelected}>
 							{txPending ? 'Tx Pending...' : 'Approve'}
 						</Button>
 					)}

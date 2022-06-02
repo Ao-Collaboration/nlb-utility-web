@@ -1,5 +1,5 @@
 import { createUseStyles } from 'react-jss'
-import { off_white, cyan } from '../../config/colors'
+import { off_white, cyan, black } from '../../config/colors'
 import { weightRegular, weightSemiBold } from '../../config/jss-vars'
 
 const styles = {
@@ -9,6 +9,7 @@ const styles = {
 		backgroundColor: off_white,
 		borderRadius: '20px',
 		cursor: 'pointer',
+		color: black,
 	},
 	selectedCard: {
 		composes: '$card',
