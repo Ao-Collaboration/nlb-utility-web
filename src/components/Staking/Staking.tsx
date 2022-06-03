@@ -1,9 +1,7 @@
-import { BigNumber, Contract, ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import nlbABI from '../../abi/nlbABI.json'
-import stakingABI from '../../abi/stakingABI.json'
-import { getNlbContractId, getStakingContractId } from '../../config/chain'
+import { ContractContext } from '../../context/Web3/ContractContext'
 import { Web3Context } from '../../context/Web3/Web3Context'
 import { NFTMetadata } from '../../interface/nftMetadata'
 import doFetch from '../../utils/doFetch'
@@ -21,54 +19,31 @@ interface NFTSelected extends NFTMetadata {
 const Staking: React.FC = () => {
 	const [unstaked, setUnstaked] = useState<NFTSelected[]>([])
 	const [staked, setStaked] = useState<NFTSelected[]>([])
-	const [stakingContract, setStakingContract] = useState<Contract>()
-	const [nlbContract, setNlbContract] = useState<Contract>()
 	const [isLoading, setIsLoading] = useState(true)
 	const [isApproved, setIsApproved] = useState(false)
 	const [txPending, setTxPending] = useState(false)
 	const [forceRefresh, setForceRefresh] = useState(true) // Toggle this state to force a refresh
 
-	const { address, web3Provider } = useContext(Web3Context)
-
-	if (!web3Provider) {
-		return <></>
-	}
+	const { address } = useContext(Web3Context)
+	const { stakingContract, stakingContractId, nlbContract } = useContext(ContractContext)
 
 	const classes = useStyles()
 
 	useEffect(() => {
 		getNLBs()
-	}, [web3Provider])
+	}, [stakingContract, nlbContract])
 
 	const getNLBs = async () => {
 		setIsLoading(true)
 
-		const { chainId } = await web3Provider.getNetwork()
-		const stakingContractId = getStakingContractId(chainId)
-		const nlbContractId = getNlbContractId(chainId)
-		if (!stakingContractId || !nlbContractId) {
+		if (!stakingContract || ! nlbContract) {
 			setIsLoading(false)
 			return
 		}
 
-		const signer = web3Provider.getSigner()
-		const _stakingContract = new ethers.Contract(
-			stakingContractId,
-			stakingABI,
-			signer,
-		)
-		setStakingContract(_stakingContract)
-
-		const _nlbContract = new ethers.Contract(
-			nlbContractId,
-			nlbABI,
-			signer,
-		)
-		setNlbContract(_nlbContract)
-
-		const allNLBs = await _nlbContract.walletOfOwner(address)
+		const allNLBs = await nlbContract.walletOfOwner(address)
 		// const allNLBs = [BigNumber.from(1), BigNumber.from(2)]
-		const stakedNLBs = await _stakingContract.listStakedTokensOfOwner(address)
+		const stakedNLBs = await stakingContract.listStakedTokensOfOwner(address)
 		const unstakedNLBs: BigNumber[] = []
 
 		allNLBs.forEach((token_id: BigNumber) => {
@@ -80,7 +55,7 @@ const Staking: React.FC = () => {
 		const stakedNLBData: NFTSelected[] = []
 		const unstakedNLBData: NFTSelected[] = []
 
-		const basePath = await _nlbContract.baseURI()
+		const basePath = await nlbContract.baseURI()
 		// const basePath = 'https://opensea.mypinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/'
 
 		let metadataPromises: Promise<NFTSelected>[] = []
@@ -126,7 +101,7 @@ const Staking: React.FC = () => {
 
 		// Check approved status
 		setIsApproved(
-			await _nlbContract.isApprovedForAll(
+			await nlbContract.isApprovedForAll(
 				address,
 				stakingContractId,
 			),
@@ -155,8 +130,6 @@ const Staking: React.FC = () => {
 			return
 		}
 
-		const { chainId } = await web3Provider.getNetwork()
-		const stakingContractId = getStakingContractId(chainId)
 		try {
 			const tx = await nlbContract?.setApprovalForAll(stakingContractId, true)
 			setTxPending(true)
@@ -214,6 +187,10 @@ const Staking: React.FC = () => {
 	const hasStakeSelected = !!staked.find(h => h.selected)
 	const hasUnstakeSelected = !!unstaked.find(h => h.selected)
 
+	if (!stakingContract || ! nlbContract) {
+		return <></>
+	}
+
 	return (
 		<div className={classes.sectionContainer}>
 			<div>
@@ -248,7 +225,7 @@ const Staking: React.FC = () => {
 							) : (
 								<p>No NLBs staked</p>
 							)}
-							<Balance stakingContract={stakingContract} stakedIds={staked.map(s => s.tokenId)} />
+							<Balance stakedIds={staked.map(s => s.tokenId)} />
 						</>
 					)
 				}

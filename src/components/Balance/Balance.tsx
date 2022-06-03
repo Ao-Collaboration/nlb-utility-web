@@ -1,6 +1,7 @@
-import { BigNumber, Contract, ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { ContractContext } from '../../context/Web3/ContractContext'
 import { Web3Context } from '../../context/Web3/Web3Context'
 import { formatEthers } from '../../utils/format'
 import Button from '../Button/Button'
@@ -8,12 +9,12 @@ import Spinner from '../Spinner/Spinner'
 import useStyles from './Balance.styles'
 
 interface Props {
-	stakingContract?: Contract
 	stakedIds?: BigNumber[]
 }
 
-const Balance: React.FC<Props> = ({ stakingContract, stakedIds }) => {
-	const { address, web3Provider } = useContext(Web3Context)
+const Balance: React.FC<Props> = ({ stakedIds }) => {
+	const { address } = useContext(Web3Context)
+	const { stakingContract } = useContext(ContractContext)
 
 	const [balance, setBalance] = useState('0')
 	const [owed, setOwed] = useState('0')
@@ -45,7 +46,7 @@ const Balance: React.FC<Props> = ({ stakingContract, stakedIds }) => {
 
 	useEffect(() => {
 		getBalances()
-	}, [web3Provider])
+	}, [stakingContract])
 
 	const claimTokens = async () => {
 		setIsLoading(true)
