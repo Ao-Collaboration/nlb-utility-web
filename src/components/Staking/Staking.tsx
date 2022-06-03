@@ -248,7 +248,7 @@ const Staking: React.FC = () => {
 							) : (
 								<p>No NLBs staked</p>
 							)}
-							<Balance />
+							<Balance stakingContract={stakingContract} stakedIds={staked.map(s => s.tokenId)} />
 						</>
 					)
 				}
