@@ -10,7 +10,6 @@ const styles = {
 		padding: '1.5em 4em',
 		backgroundColor: white,
 		borderRadius: '20px',
-		cursor: 'pointer',
 		color: black,
 	},
 	title: {
