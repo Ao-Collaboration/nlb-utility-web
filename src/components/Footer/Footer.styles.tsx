@@ -14,9 +14,17 @@ const styles = {
 		background: 'transparent linear-gradient(264deg, #6861FE 0%, #0C99FD 43%, #00A7FF 78%, #860FED 100%) 0% 0% no-repeat padding-box',
 	},
 	inner: {
-		display: 'flex',
-		justifyContent: 'space-between',
+		display: 'grid',
+		gridTemplateColumns: 'repeat(3, 1fr)',
+		justifyContent: 'center',
+		alignItems: 'center',
 		padding: '1em',
+	},
+	center: {
+		textAlign: 'center',
+	},
+	right: {
+		textAlign: 'right',
 	},
 }
 

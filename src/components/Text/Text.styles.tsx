@@ -15,8 +15,7 @@ const styles = {
 		fontFamily: standardFontFamily,
 		letterSpacing: headingLetterSpacing,
 		color: white,
-		margin: 0,
-		marginBottom: '1em',
+		margin: '0.8em 0',
 		textTransform: 'uppercase',
 	},
 	h1: {
@@ -56,6 +55,10 @@ const styles = {
 	bodyBlue: {
 		composes: '$body',
 		color: light_blue,
+	},
+	small: {
+		composes: '$body',
+		fontSize: '0.8em',
 	},
 }
 

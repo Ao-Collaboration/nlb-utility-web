@@ -1,6 +1,5 @@
 import Button from '../Button/Button'
 import AoLogo from '../Logo/AoLogo'
-import NLBLogo from '../Logo/NLBLogo'
 import Text from '../Text/Text'
 import useStyles from './Footer.styles'
 
@@ -19,8 +18,11 @@ const Footer: React.FC = () => {
 				</a>
 			</div>
 			<div className={classes.inner}>
-				<NLBLogo />
-				<a href='https://block.aocollab.tech'>
+				<Text variant='small'>A Dystopia Productions Project</Text>
+				<div className={classes.center}>
+					<Text variant='small'>© All Rights Reserved 2022</Text>
+				</div>
+				<a href='https://block.aocollab.tech' className={classes.right}>
 					<AoLogo />
 				</a>
 			</div>

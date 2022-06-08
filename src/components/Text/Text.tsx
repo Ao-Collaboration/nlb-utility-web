@@ -1,6 +1,6 @@
 import useStyles from './Text.styles'
 
-export type Variants = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'body' | 'body-blue' | 'body-purple'
+export type Variants = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'body' | 'body-blue' | 'body-purple' | 'small'
 
 interface Props {
 	children?: React.ReactNode
@@ -26,6 +26,8 @@ const Text: React.FC<Props> = ({ children, variant }) => {
 		return <p className={classes.bodyBlue}>{children}</p>
 	} else if (variant === 'body-purple') {
 		return <p className={classes.bodyPurple}>{children}</p>
+	} else if (variant === 'small') {
+		return <p className={classes.small}>{children}</p>
 	} else {
 		return null
 	}
