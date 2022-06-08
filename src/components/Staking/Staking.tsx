@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { ContractContext } from '../../context/Web3/ContractContext'
@@ -38,21 +38,16 @@ const Staking: React.FC = () => {
 	const getNLBs = async () => {
 		setIsLoading(true)
 
-		if (!stakingContract || !nlbContract) {
+		if (!nlbContract) {
 			setIsLoading(false)
 			return
 		}
 
-		const allNLBs = await nlbContract.walletOfOwner(address)
-		// const allNLBs = [BigNumber.from(1), BigNumber.from(2)]
-		const stakedNLBs = await stakingContract.listStakedTokensOfOwner(address)
-		const unstakedNLBs: BigNumber[] = []
-
-		allNLBs.forEach((token_id: BigNumber) => {
-			if (!stakedNLBs.includes(token_id)) {
-				unstakedNLBs.push(token_id)
-			}
-		})
+		const unstakedNLBs = await nlbContract.walletOfOwner(address)
+		let stakedNLBs: BigNumber[] = []
+		if (stakingContract) {
+			stakedNLBs = await stakingContract.listStakedTokensOfOwner(address)
+		}
 
 		const stakedNLBData: NFTSelected[] = []
 		const unstakedNLBData: NFTSelected[] = []
@@ -104,7 +99,7 @@ const Staking: React.FC = () => {
 
 		// Check approved status
 		setIsApproved(
-			await nlbContract.isApprovedForAll(address, stakingContractId),
+			await nlbContract.isApprovedForAll(address, stakingContractId || ethers.constants.AddressZero),
 		)
 
 		setIsLoading(false)
@@ -187,7 +182,7 @@ const Staking: React.FC = () => {
 	const hasStakeSelected = !!staked.find(h => h.selected)
 	const hasUnstakeSelected = !!unstaked.find(h => h.selected)
 
-	if (!stakingContract || !nlbContract) {
+	if (!nlbContract) {
 		return <></>
 	}
 
@@ -240,23 +235,25 @@ const Staking: React.FC = () => {
 							/>
 						))}
 					</div>
-					{isApproved ? (
-						<Button
-							onClick={doStake}
-							disabled={txPending || !hasUnstakeSelected}
-							className='primaryInverted'
-						>
-							{txPending ? 'Tx Pending...' : 'Stake'}
-						</Button>
-					) : (
-						<Button
-							onClick={doApproval}
-							disabled={txPending || !hasUnstakeSelected}
-							className='primaryInverted'
-						>
-							{txPending ? 'Tx Pending...' : 'Approve'}
-						</Button>
-					)}
+					{stakingContract &&
+						isApproved ? (
+							<Button
+								onClick={doStake}
+								disabled={txPending || !hasUnstakeSelected}
+								className='primaryInverted'
+							>
+								{txPending ? 'Tx Pending...' : 'Stake'}
+							</Button>
+						) : (
+							<Button
+								onClick={doApproval}
+								disabled={txPending || !hasUnstakeSelected}
+								className='primaryInverted'
+							>
+								{txPending ? 'Tx Pending...' : 'Approve'}
+							</Button>
+						)
+					}
 				</div>
 			)}
 		</div>

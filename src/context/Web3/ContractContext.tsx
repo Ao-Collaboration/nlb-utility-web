@@ -43,23 +43,24 @@ const ContractContextProvider: FC<Props> = ({ children }) => {
 		const { chainId } = await web3Provider.getNetwork()
 		const _stakingContractId = getStakingContractId(chainId)
 		const _nlbContractId = getNlbContractId(chainId)
-		if (!_stakingContractId || !_nlbContractId) {
-			return
-		}
-
-		setStakingContractId(_stakingContractId)
-		setNlbContractId(_nlbContractId)
 
 		const signer = web3Provider.getSigner()
-		const _stakingContract = new ethers.Contract(
-			_stakingContractId,
-			stakingABI,
-			signer,
-		)
-		setStakingContract(_stakingContract)
 
-		const _nlbContract = new ethers.Contract(_nlbContractId, nlbABI, signer)
-		setNlbContract(_nlbContract)
+		if (_stakingContractId) {
+			setStakingContractId(_stakingContractId)
+			const _stakingContract = new ethers.Contract(
+				_stakingContractId,
+				stakingABI,
+				signer,
+			)
+			setStakingContract(_stakingContract)
+		}
+
+		if (_nlbContractId) {
+			setNlbContractId(_nlbContractId)
+			const _nlbContract = new ethers.Contract(_nlbContractId, nlbABI, signer)
+			setNlbContract(_nlbContract)
+		}
 	}
 
 	return (
