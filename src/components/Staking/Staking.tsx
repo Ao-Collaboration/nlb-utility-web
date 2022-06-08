@@ -53,7 +53,6 @@ const Staking: React.FC = () => {
 		const unstakedNLBData: NFTSelected[] = []
 
 		const basePath = await nlbContract.baseURI()
-		// const basePath = 'https://opensea.mypinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/'
 
 		let metadataPromises: Promise<NFTSelected>[] = []
 
@@ -70,7 +69,7 @@ const Staking: React.FC = () => {
 		// Get staked metadata
 		for (let i = 0; i < stakedNLBs.length; i++) {
 			metadataPromises.push(
-				doFetch(`${basePath}${stakedNLBs[i].toNumber()}`, 'GET'),
+				doFetch(`${basePath}${stakedNLBs[i].toNumber()}.json`, 'GET'),
 			)
 		}
 		await Promise.all(metadataPromises)
@@ -84,7 +83,7 @@ const Staking: React.FC = () => {
 		metadataPromises = []
 		for (let i = 0; i < unstakedNLBs.length; i++) {
 			metadataPromises.push(
-				doFetch(`${basePath}${unstakedNLBs[i].toNumber()}`, 'GET'),
+				doFetch(`${basePath}${unstakedNLBs[i].toNumber()}.json`, 'GET'),
 			)
 		}
 		await Promise.all(metadataPromises)
