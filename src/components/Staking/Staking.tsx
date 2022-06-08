@@ -7,6 +7,7 @@ import { NFTMetadata } from '../../interface/nftMetadata'
 import doFetch from '../../utils/doFetch'
 import Button from '../Button/Button'
 import Spinner from '../Spinner/Spinner'
+import Text from '../Text/Text'
 import NFTCard from './NFTCard'
 import useStyles from './Staking.styles'
 
@@ -197,7 +198,7 @@ const Staking: React.FC = () => {
 					<Spinner />
 				) : staked.length === 0 && unstaked.length === 0 ? (
 					<>
-						<h2 className={classes.heading}>No NLBs</h2>
+						<Text variant='h2'>No NLBs</Text>
 					</>
 				) : (
 					<div className={classes.section}>

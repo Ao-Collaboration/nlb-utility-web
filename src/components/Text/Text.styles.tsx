@@ -28,7 +28,7 @@ const styles = {
 	h2: {
 		composes: '$base',
 		fontSize: '2em',
-		color: light_blue,
+		color: white,
 		textShadow,
 	},
 	h3: {
@@ -45,13 +45,17 @@ const styles = {
 	},
 	body: {
 		composes: '$base',
-		color: light_blue,
+		color: white,
 		textShadow,
 	},
 	bodyPurple: {
-		composes: '$base',
+		composes: '$body',
 		textShadow: 'none',
 		color: purple,
+	},
+	bodyBlue: {
+		composes: '$body',
+		color: light_blue,
 	},
 }
 
