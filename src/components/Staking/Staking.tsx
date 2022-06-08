@@ -61,6 +61,16 @@ const Staking: React.FC = () => {
 
 		let metadataPromises: Promise<NFTSelected>[] = []
 
+		const cleanMetadata = (metadata: NFTSelected, tokenId: BigNumber) => {
+			metadata.tokenId = tokenId
+			metadata.selected = false
+			metadata.name = metadata.name || `NLB #${tokenId.toNumber()}`
+			metadata.image = metadata.image.replace(
+				'ipfs://',
+				'https://ipfs.io/ipfs/',
+			)
+		}
+
 		// Get staked metadata
 		for (let i = 0; i < stakedNLBs.length; i++) {
 			metadataPromises.push(
@@ -70,13 +80,7 @@ const Staking: React.FC = () => {
 		await Promise.all(metadataPromises)
 		for (let i = 0; i < stakedNLBs.length; i++) {
 			const metadata: NFTSelected = await metadataPromises[i]
-			metadata.tokenId = stakedNLBs[i]
-			metadata.selected = false
-			metadata.name = metadata.name || `#${stakedNLBs[i].toNumber()}`
-			metadata.image = metadata.image.replace(
-				'ipfs://',
-				'https://ipfs.io/ipfs/',
-			)
+			cleanMetadata(metadata, stakedNLBs[i])
 			stakedNLBData.push(metadata)
 		}
 
@@ -90,14 +94,7 @@ const Staking: React.FC = () => {
 		await Promise.all(metadataPromises)
 		for (let i = 0; i < unstakedNLBs.length; i++) {
 			const metadata = await metadataPromises[i]
-			metadata.tokenId = unstakedNLBs[i]
-			metadata.selected = false
-			metadata.name = metadata.name || `#${unstakedNLBs[i].toNumber()}`
-			metadata.image = metadata.image.replace(
-				'ipfs://',
-				'https://ipfs.io/ipfs/',
-			)
-			console.error(metadata)
+			cleanMetadata(metadata, unstakedNLBs[i])
 			unstakedNLBData.push(metadata)
 		}
 
@@ -203,7 +200,7 @@ const Staking: React.FC = () => {
 						<h2 className={classes.heading}>No NLBs</h2>
 					</>
 				) : (
-					<>
+					<div className={classes.section}>
 						<h2 className={classes.heading}>Staked</h2>
 						{staked.length > 0 ? (
 							<>
@@ -218,7 +215,7 @@ const Staking: React.FC = () => {
 									))}
 								</div>
 								{hasStakeSelected && (
-									<Button onClick={doUnstake} disabled={txPending}>
+									<Button onClick={doUnstake} disabled={txPending} className='primaryInverted'>
 										{txPending ? 'Tx Pending...' : 'Unstake'}
 									</Button>
 								)}
@@ -226,11 +223,11 @@ const Staking: React.FC = () => {
 						) : (
 							<p>No NLBs staked</p>
 						)}
-					</>
+					</div>
 				)}
 			</div>
 			{!isLoading && unstaked.length > 0 && (
-				<div>
+				<div className={classes.section}>
 					<h2 className={classes.heading}>Unstaked</h2>
 					<div className={classes.container}>
 						{unstaked.map(nlb => (
@@ -246,6 +243,7 @@ const Staking: React.FC = () => {
 						<Button
 							onClick={doStake}
 							disabled={txPending || !hasUnstakeSelected}
+							className='primaryInverted'
 						>
 							{txPending ? 'Tx Pending...' : 'Stake'}
 						</Button>
@@ -253,6 +251,7 @@ const Staking: React.FC = () => {
 						<Button
 							onClick={doApproval}
 							disabled={txPending || !hasUnstakeSelected}
+							className='primaryInverted'
 						>
 							{txPending ? 'Tx Pending...' : 'Approve'}
 						</Button>

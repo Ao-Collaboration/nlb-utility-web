@@ -18,6 +18,9 @@ const styles = {
 		alignItems: 'center',
 		maxWidth: '60em',
 	},
+	section: {
+		marginBottom: '2em',
+	},
 	titleSection: {
 		marginBottom: '3em',
 	},

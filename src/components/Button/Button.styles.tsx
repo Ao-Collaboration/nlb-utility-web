@@ -1,15 +1,17 @@
 import { createUseStyles } from 'react-jss'
 import { standardFontFamily, weightSemiBold } from '../../config/jss-vars'
 import {
-	black,
 	white,
 	off_black,
 	off_white,
 	cyan,
 	teal,
+	purple,
+	off_purple,
+	black,
 } from '../../config/colors'
 
-export type ClassNames = 'primary' | 'link' | 'success' | 'error' | 'info'
+export type ClassNames = 'primary' | 'primaryInverted' | 'primaryBlack' | 'link' | 'success' | 'error' | 'info'
 
 const styles = {
 	base: {
@@ -25,8 +27,10 @@ const styles = {
 		composes: '$base',
 		border: 'none',
 		borderRadius: '0.35em',
-		padding: '1rem 2rem',
+		padding: '0.75rem 4rem',
 		letterSpacing: 0,
+		textTransform: 'uppercase',
+		fontWeight: weightSemiBold,
 		boxShadow: `0em 0.15em 0.65em 0em ${off_black}`,
 		'&:disabled': {
 			cursor: 'default',
@@ -36,8 +40,22 @@ const styles = {
 	},
 	primary: {
 		composes: '$button',
-		textTransform: 'uppercase',
-		fontWeight: weightSemiBold,
+		background: purple,
+		color: off_white,
+		'&:hover': {
+			color: white,
+		}
+	},
+	primaryInverted: {
+		composes: '$button',
+		background: white,
+		color: off_purple,
+		'&:hover': {
+			color: purple,
+		}
+	},
+	primaryBlack: {
+		composes: '$button',
 		background: black,
 		color: off_white,
 		'&:hover': {

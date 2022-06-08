@@ -12,9 +12,9 @@ const NFTCard: React.FC<Props> = ({ nft, selected, onClick }) => {
 	const classes = useStyles()
 	return (
 		<div className={selected ? classes.selectedCard : classes.card} onClick={() => onClick(nft.name)}>
-			<img className={classes.image} src={nft?.image}></img>
+			<img className={classes.image} src={nft.image}></img>
 			<p className={classes.caption}>
-				{nft?.name}
+				{nft.name}
 			</p>
 		</div>
 	)

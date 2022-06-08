@@ -20,7 +20,7 @@ const styles = {
 		borderRadius: '6px',
 	},
 	caption: {
-		textAlign: 'left',
+		textAlign: 'right',
 		fontWeight: weightSemiBold,
 	},
 	small: {

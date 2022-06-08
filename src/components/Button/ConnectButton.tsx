@@ -78,7 +78,7 @@ const ConnectButton: React.FC = () => {
 			{isLoading ? (
 				<Spinner />
 			) : (
-				<Button onClick={connect} className="primary">
+				<Button onClick={connect} className="primaryBlack">
 					{account || 'Connect Wallet'}
 				</Button>
 			)}
