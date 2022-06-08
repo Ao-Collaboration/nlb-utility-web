@@ -1,5 +1,5 @@
 import { createUseStyles } from 'react-jss'
-import { off_white, cyan, black } from '../../config/colors'
+import { off_white, black, purple } from '../../config/colors'
 import { weightRegular, weightSemiBold } from '../../config/jss-vars'
 
 const styles = {
@@ -13,7 +13,7 @@ const styles = {
 	},
 	selectedCard: {
 		composes: '$card',
-		backgroundColor: cyan,
+		backgroundColor: purple,
 	},
 	image: {
 		maxWidth: '200px',

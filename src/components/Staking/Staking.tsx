@@ -202,7 +202,7 @@ const Staking: React.FC = () => {
 					</>
 				) : (
 					<div className={classes.section}>
-						<h2 className={classes.heading}>Staked</h2>
+						<Text variant='h2'>Staked NFTs</Text>
 						{staked.length > 0 ? (
 							<>
 								<div className={classes.container}>
@@ -222,14 +222,14 @@ const Staking: React.FC = () => {
 								)}
 							</>
 						) : (
-							<p>No NLBs staked</p>
+							<Text variant='body'>No NLBs staked</Text>
 						)}
 					</div>
 				)}
 			</div>
 			{!isLoading && unstaked.length > 0 && (
 				<div className={classes.section}>
-					<h2 className={classes.heading}>Unstaked</h2>
+					<Text variant='h2'>Unstaked NFTs</Text>
 					<div className={classes.container}>
 						{unstaked.map(nlb => (
 							<NFTCard

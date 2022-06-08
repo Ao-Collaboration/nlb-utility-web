@@ -14,10 +14,10 @@ const Profile: React.FC = () => {
 				<div className={classes.titleSection}>
 					<Header />
 					<Text variant="h1">Stake your Battalion!</Text>
-					<Text variant="body">
+					<Text variant="body-blue">
 						Earn $CHOW by staking your Nine lives battalion NFTs.
 					</Text>
-					<Text variant="body">
+					<Text variant="body-blue">
 						Each NLB token will earn you $CHOW over time.
 						<br />
 						Use your $chow tokens to unlock benefits and features only
