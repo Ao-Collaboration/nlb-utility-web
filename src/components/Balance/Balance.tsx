@@ -71,6 +71,10 @@ const Balance: React.FC = () => {
 		getBalances()
 	}
 
+	if (!stakingContract) {
+		return <></>
+	}
+
 	return (
 		<div className={classes.section}>
 			{isLoading ? (
