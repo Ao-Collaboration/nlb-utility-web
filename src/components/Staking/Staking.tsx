@@ -5,7 +5,6 @@ import { ContractContext } from '../../context/Web3/ContractContext'
 import { Web3Context } from '../../context/Web3/Web3Context'
 import { NFTMetadata } from '../../interface/nftMetadata'
 import doFetch from '../../utils/doFetch'
-import Balance from '../Balance/Balance'
 import Button from '../Button/Button'
 import Spinner from '../Spinner/Spinner'
 import NFTCard from './NFTCard'
@@ -227,7 +226,6 @@ const Staking: React.FC = () => {
 						) : (
 							<p>No NLBs staked</p>
 						)}
-						<Balance stakedIds={staked.map(s => s.tokenId)} />
 					</>
 				)}
 			</div>

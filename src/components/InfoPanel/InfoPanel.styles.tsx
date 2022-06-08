@@ -1,21 +1,24 @@
 import { createUseStyles } from 'react-jss'
+import { black, white } from '../../config/colors'
 import { weightSemiBold } from '../../config/jss-vars'
 
 const styles = {
-	section: {
+	card: {
 		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'flex-start',
-		gap: '2em',
-		margin: '2em 0',
+		flexDirection: 'column',
+		gap: '0.5em',
+		padding: '1.5em 4em',
+		backgroundColor: white,
+		borderRadius: '20px',
+		cursor: 'pointer',
+		color: black,
 	},
-	text: {
+	title: {
 		fontSize: '1.2em',
 		textTransform: 'uppercase',
 		fontWeight: weightSemiBold,
 	},
-	textSpecial: {
+	content: {
 		fontSize: '1.5em',
 	},
 }
