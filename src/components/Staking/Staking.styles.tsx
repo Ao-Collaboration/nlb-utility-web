@@ -1,4 +1,5 @@
 import { createUseStyles } from 'react-jss'
+import { light_blue, text_shadow, white } from '../../config/colors'
 import { headingLetterSpacing, standardFontFamily } from '../../config/jss-vars'
 
 const styles = {
@@ -17,6 +18,19 @@ const styles = {
 		alignItems: 'center',
 		maxWidth: '60em',
 	},
+	titleSection: {
+		marginBottom: '3em',
+	},
+	title: {
+		fontFamily: standardFontFamily,
+		letterSpacing: headingLetterSpacing,
+		fontSize: '3em',
+		color: light_blue,
+		textShadow: `-5px -1px 0px ${text_shadow}`,
+		margin: 0,
+		marginBottom: '1em',
+		textTransform: 'uppercase',
+	},
 	heading: {
 		fontFamily: standardFontFamily,
 		letterSpacing: headingLetterSpacing,
@@ -24,9 +38,12 @@ const styles = {
 		margin: 0,
 		textTransform: 'uppercase',
 	},
-	subheading: {
+	text: {
+		composes: '$title',
+		fontSize: '1em',
+		color: white,
 		marginBottom: '1em',
-	}
+	},
 }
 
 export default createUseStyles(styles)

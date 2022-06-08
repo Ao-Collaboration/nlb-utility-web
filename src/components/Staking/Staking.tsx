@@ -25,7 +25,9 @@ const Staking: React.FC = () => {
 	const [forceRefresh, setForceRefresh] = useState(true) // Toggle this state to force a refresh
 
 	const { address } = useContext(Web3Context)
-	const { stakingContract, stakingContractId, nlbContract } = useContext(ContractContext)
+	const { stakingContract, stakingContractId, nlbContract } = useContext(
+		ContractContext,
+	)
 
 	const classes = useStyles()
 
@@ -36,7 +38,7 @@ const Staking: React.FC = () => {
 	const getNLBs = async () => {
 		setIsLoading(true)
 
-		if (!stakingContract || ! nlbContract) {
+		if (!stakingContract || !nlbContract) {
 			setIsLoading(false)
 			return
 		}
@@ -62,10 +64,9 @@ const Staking: React.FC = () => {
 
 		// Get staked metadata
 		for (let i = 0; i < stakedNLBs.length; i++) {
-			metadataPromises.push(doFetch(
-				`${basePath}${stakedNLBs[i].toNumber()}`,
-				'GET',
-			))
+			metadataPromises.push(
+				doFetch(`${basePath}${stakedNLBs[i].toNumber()}`, 'GET'),
+			)
 		}
 		await Promise.all(metadataPromises)
 		for (let i = 0; i < stakedNLBs.length; i++) {
@@ -73,17 +74,19 @@ const Staking: React.FC = () => {
 			metadata.tokenId = stakedNLBs[i]
 			metadata.selected = false
 			metadata.name = metadata.name || `#${stakedNLBs[i].toNumber()}`
-			metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+			metadata.image = metadata.image.replace(
+				'ipfs://',
+				'https://ipfs.io/ipfs/',
+			)
 			stakedNLBData.push(metadata)
 		}
-		
+
 		// Get unstaked metadata
 		metadataPromises = []
 		for (let i = 0; i < unstakedNLBs.length; i++) {
-			metadataPromises.push(doFetch(
-				`${basePath}${unstakedNLBs[i].toNumber()}`,
-				'GET',
-			))
+			metadataPromises.push(
+				doFetch(`${basePath}${unstakedNLBs[i].toNumber()}`, 'GET'),
+			)
 		}
 		await Promise.all(metadataPromises)
 		for (let i = 0; i < unstakedNLBs.length; i++) {
@@ -91,7 +94,10 @@ const Staking: React.FC = () => {
 			metadata.tokenId = unstakedNLBs[i]
 			metadata.selected = false
 			metadata.name = metadata.name || `#${unstakedNLBs[i].toNumber()}`
-			metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')
+			metadata.image = metadata.image.replace(
+				'ipfs://',
+				'https://ipfs.io/ipfs/',
+			)
 			console.error(metadata)
 			unstakedNLBData.push(metadata)
 		}
@@ -101,10 +107,7 @@ const Staking: React.FC = () => {
 
 		// Check approved status
 		setIsApproved(
-			await nlbContract.isApprovedForAll(
-				address,
-				stakingContractId,
-			),
+			await nlbContract.isApprovedForAll(address, stakingContractId),
 		)
 
 		setIsLoading(false)
@@ -136,7 +139,7 @@ const Staking: React.FC = () => {
 			await tx.wait()
 			setIsApproved(true)
 			setTxPending(false)
-		} catch (err: unknown) {
+		} catch (err) {
 			if (err instanceof Error) {
 				toast.error(err.message)
 			}
@@ -158,7 +161,7 @@ const Staking: React.FC = () => {
 			await tx.wait()
 			setTxPending(false)
 			getNLBs()
-		} catch (err: unknown) {
+		} catch (err) {
 			if (err instanceof Error) {
 				toast.error(err.message)
 			}
@@ -177,7 +180,7 @@ const Staking: React.FC = () => {
 			await tx.wait()
 			setTxPending(false)
 			getNLBs()
-		} catch (err: unknown) {
+		} catch (err) {
 			if (err instanceof Error) {
 				toast.error(err.message)
 			}
@@ -187,7 +190,7 @@ const Staking: React.FC = () => {
 	const hasStakeSelected = !!staked.find(h => h.selected)
 	const hasUnstakeSelected = !!unstaked.find(h => h.selected)
 
-	if (!stakingContract || ! nlbContract) {
+	if (!stakingContract || !nlbContract) {
 		return <></>
 	}
 
@@ -196,39 +199,37 @@ const Staking: React.FC = () => {
 			<div>
 				{isLoading ? (
 					<Spinner />
-				) :
-					staked.length === 0 && unstaked.length === 0 ? (
-						<>
-							<h2 className={classes.heading}>No NLBs</h2>
-						</>
-					) : (
-						<>
-							<h2 className={classes.heading}>Staked</h2>
-							{staked.length > 0 ? (
-								<>
-									<div className={classes.container}>
-										{staked.map(nlb => (
-											<NFTCard
-												key={nlb.name}
-												nft={nlb}
-												selected={nlb.selected}
-												onClick={updateSelected}
-											/>
-										))}
-									</div>
-									{hasStakeSelected && (
-										<Button onClick={doUnstake} disabled={txPending}>
-											{txPending ? 'Tx Pending...' : 'Unstake'}
-										</Button>
-									)}
-								</>
-							) : (
-								<p>No NLBs staked</p>
-							)}
-							<Balance stakedIds={staked.map(s => s.tokenId)} />
-						</>
-					)
-				}
+				) : staked.length === 0 && unstaked.length === 0 ? (
+					<>
+						<h2 className={classes.heading}>No NLBs</h2>
+					</>
+				) : (
+					<>
+						<h2 className={classes.heading}>Staked</h2>
+						{staked.length > 0 ? (
+							<>
+								<div className={classes.container}>
+									{staked.map(nlb => (
+										<NFTCard
+											key={nlb.name}
+											nft={nlb}
+											selected={nlb.selected}
+											onClick={updateSelected}
+										/>
+									))}
+								</div>
+								{hasStakeSelected && (
+									<Button onClick={doUnstake} disabled={txPending}>
+										{txPending ? 'Tx Pending...' : 'Unstake'}
+									</Button>
+								)}
+							</>
+						) : (
+							<p>No NLBs staked</p>
+						)}
+						<Balance stakedIds={staked.map(s => s.tokenId)} />
+					</>
+				)}
 			</div>
 			{!isLoading && unstaked.length > 0 && (
 				<div>
@@ -244,11 +245,17 @@ const Staking: React.FC = () => {
 						))}
 					</div>
 					{isApproved ? (
-						<Button onClick={doStake} disabled={txPending || !hasUnstakeSelected}>
+						<Button
+							onClick={doStake}
+							disabled={txPending || !hasUnstakeSelected}
+						>
 							{txPending ? 'Tx Pending...' : 'Stake'}
 						</Button>
 					) : (
-						<Button onClick={doApproval} disabled={txPending || !hasUnstakeSelected}>
+						<Button
+							onClick={doApproval}
+							disabled={txPending || !hasUnstakeSelected}
+						>
 							{txPending ? 'Tx Pending...' : 'Approve'}
 						</Button>
 					)}
