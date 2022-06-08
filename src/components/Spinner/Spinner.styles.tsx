@@ -1,5 +1,5 @@
 import { createUseStyles } from 'react-jss'
-import { black } from '../../config/colors'
+import { white } from '../../config/colors'
 
 const styles = {
 	'@global': {
@@ -10,7 +10,7 @@ const styles = {
 	spinner: {
 		width: '5em',
 		height: '5em',
-		borderTop: `0.4em solid ${black}`,
+		borderTop: `0.4em solid ${white}`,
 		borderRight: '0.4em solid transparent',
 		borderRadius: '50%',
 		animation: 'spinner 0.6s linear infinite'
