@@ -193,7 +193,7 @@ const Staking: React.FC = () => {
 					<Spinner />
 				) : staked.length === 0 && unstaked.length === 0 ? (
 					<>
-						<Text variant='h2'>No NLBs</Text>
+						<Text variant='h2'>You don't have any NLBs</Text>
 					</>
 				) : (
 					<div className={classes.section}>
