@@ -39,7 +39,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "yarn build && echo nlb.aocollab.tech > build/CNAME",
+    "predeploy": "yarn build && echo utility.nlbnft.com > build/CNAME",
     "deploy": "gh-pages -d build",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
