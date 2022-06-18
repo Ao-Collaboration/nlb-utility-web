@@ -9,19 +9,12 @@ const Footer: React.FC = () => {
 	return (
 		<footer className={classes.footer}>
 			<div className={classes.banner}>
-				{/* <div>
+				<div>
 					<Text variant='h2'>Need to recruit your battalion?</Text>
 					<Text variant='body'>Purchase more Nine Lives Battalion NFTS on Opensea and build up your Battalion!</Text>
 				</div>
 				<a href='https://opensea.io/collection/nlbnft'>
 					<Button onClick={() => {return true}} className='primaryInverted'>Buy on Opensea</Button>
-				</a> */}
-				<div>
-					<Text variant='h2'>Need to recruit your battalion?</Text>
-					<Text variant='body'>Mint more Nine Lives Battalion NFTS and build up your Battalion!</Text>
-				</div>
-				<a href='https://nlbnft.com/mint'>
-					<Button onClick={() => {return true}} className='primaryInverted'>Mint more NLBs</Button>
 				</a>
 			</div>
 			<div className={classes.inner}>
