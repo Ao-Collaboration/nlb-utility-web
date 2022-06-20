@@ -59,7 +59,7 @@ const Balance: React.FC = () => {
 
 		// Claim tokens
 		try {
-			const tx = await stakingContract.stake(stakedNLBs)
+			const tx = await stakingContract.claim(stakedNLBs)
 			await tx.wait()
 			getBalances()
 		} catch (err: unknown) {
