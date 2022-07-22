@@ -9,8 +9,8 @@ import Spinner from '../Spinner/Spinner'
 import useStyles from './Balance.styles'
 
 const Balance: React.FC = () => {
-	const { address } = useContext(Web3Context)
-	const { stakingContract } = useContext(ContractContext)
+	const { address, web3Provider } = useContext(Web3Context)
+	const { stakingContract, stakingContractId } = useContext(ContractContext)
 
 	const [balance, setBalance] = useState('0')
 	const [stakedNLBs, setStakedNLBs] = useState<BigNumber[]>([])
@@ -62,13 +62,32 @@ const Balance: React.FC = () => {
 			const tx = await stakingContract.claim(stakedNLBs)
 			await tx.wait()
 			getBalances()
-		} catch (err: unknown) {
+		} catch (err) {
 			if (err instanceof Error) {
 				toast.error(err.message)
 			}
 		}
 
 		getBalances()
+	}
+
+	const addToMM = async () => {
+		if (!stakingContractId || !web3Provider || !window.ethereum) {
+			return
+		}
+
+		window.ethereum.request({
+			method: 'wallet_watchAsset',
+			params: {
+				type: 'ERC20',
+				options: {
+					address: stakingContractId,
+					symbol: 'CHOW',
+					decimals: 18,
+					image: 'https://utility.nlbnft.com/img/chow.png',
+				},
+			},
+		})
 	}
 
 	if (!stakingContract) {
@@ -81,9 +100,22 @@ const Balance: React.FC = () => {
 				<Spinner />
 			) : (
 				<>
-					<InfoPanel title='Your NFTs Staked' content={`${stakedNLBs.length} NLB`} />
-					<InfoPanel title='Claimable Tokens' content={`${owed} $CHOW`} onClick={claimTokens} buttonText='Claim Tokens' />
-					<InfoPanel title='Current Balance' content={`${balance} $CHOW`} />
+					<InfoPanel
+						title="Your NFTs Staked"
+						content={`${stakedNLBs.length} NLB`}
+					/>
+					<InfoPanel
+						title="Claimable Tokens"
+						content={`${owed} $CHOW`}
+						onClick={claimTokens}
+						buttonText="Claim Tokens"
+					/>
+					<InfoPanel
+						title="Current Balance"
+						content={`${balance} $CHOW`}
+						onClick={addToMM}
+						buttonText="Add to MM"
+					/>
 				</>
 			)}
 		</div>
